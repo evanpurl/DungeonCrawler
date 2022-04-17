@@ -147,6 +147,11 @@ async def itemcreator(ctx):
 
 @bot.slash_command(description="Command to display player data.")
 async def player(ctx):
+    if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/character.txt"):
+        with open(f"{dirr}/Players/{str(ctx.user.id)}/character.txt", "r") as character:
+            charactername = character.readline()
+    else:
+        makecharacter(ctx, "default")
     servstats = []
     if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/class.txt"):
         with open(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/class.txt", "r") as clas:
