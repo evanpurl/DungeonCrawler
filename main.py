@@ -193,6 +193,7 @@ async def dc(ctx):
 async def setcharacter(ctx):
     def is_auth(m):
         return m.author == ctx.author
+    await ctx.respond("Character set tool started.")
     isfolder = []
     characters = os.listdir(f"{dirr}/Players/{str(ctx.user.id)}")
     for a in characters:
@@ -207,12 +208,16 @@ async def setcharacter(ctx):
         await ctx.send(f"**{ctx.user.name}'s Characters:** \n" + '\n'.join(unn))
         await ctx.send(f"Please select the character you want to choose.")
         unitmsg = await bot.wait_for('message', check=is_auth, timeout=300)
-        if not int(unitmsg.content).isdigit():
-            await ctx.respond(f"{unitmsg.content} is not a valid entry.")
+        if not unitmsg.content.isdigit():
+            await ctx.respond(f"{unitmsg.content} is not a valid entry, please re-run the command to try again.")
         else:
-            if a in num:
-                ind = num.index(a)
-
+            try:
+                ind = num.index(unitmsg.content)
+                with open(f"{dirr}/Players/{str(ctx.user.id)}/character.txt", "w+") as character:
+                    character.write(isfolder[ind])
+                await ctx.send("Character set!")
+            except:
+                await ctx.respond(f"{unitmsg.content} is not a valid choice, please re-run the command to try again.")
 
 
 @bot.slash_command(guild_ids=Support, description="Command to create new character.")
@@ -226,7 +231,11 @@ async def createcharacter(ctx):
         os.mkdir(f"{dirr}/Players/{str(ctx.user.id)}")
     os.mkdir(f"{dirr}/Players/{str(ctx.user.id)}/{character.content}")
     os.mkdir(f"{dirr}/Players/{str(ctx.user.id)}/{character.content}/inventory")
-    makecharacter(ctx, character.content)
+    try:
+        makecharacter(ctx, character.content)
+        await ctx.respond("Character created!")
+    except:
+        await ctx.respond("Character not created!")
 
 
 @bot.slash_command(guild_ids=Support)

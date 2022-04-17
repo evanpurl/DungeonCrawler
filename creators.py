@@ -9,17 +9,17 @@ dirr = sys.path[0]
 def makecharacter(ctx, name):
     with open(f"{dirr}/Players/{str(ctx.user.id)}/character.txt", "w+") as character:
         character.write(name)
-    with open(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/damage.txt", "w+") as damage:
+    with open(f"{dirr}/Players/{str(ctx.user.id)}/{name}/damage.txt", "w+") as damage:
         damage.write(str(5))
-    with open(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/defense.txt", "w+") as defense:
+    with open(f"{dirr}/Players/{str(ctx.user.id)}/{name}/defense.txt", "w+") as defense:
         defense.write(str(4))
-    with open(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/health.txt", "w+") as health:
+    with open(f"{dirr}/Players/{str(ctx.user.id)}/{name}/health.txt", "w+") as health:
         health.write(str(100))
-    with open(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/level.txt", "w+") as level:
+    with open(f"{dirr}/Players/{str(ctx.user.id)}/{name}/level.txt", "w+") as level:
         level.write(str(1))
-    with open(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/mana.txt", "w+") as mana:
+    with open(f"{dirr}/Players/{str(ctx.user.id)}/{name}/mana.txt", "w+") as mana:
         mana.write(str(100))
-    with open(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/xp.txt", "w+") as xp:
+    with open(f"{dirr}/Players/{str(ctx.user.id)}/{name}/xp.txt", "w+") as xp:
         xp.write(str(0))
 
 
