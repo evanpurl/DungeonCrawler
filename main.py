@@ -182,7 +182,7 @@ async def dc(ctx):
         os.mkdir(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/inventory")
         makecharacter(ctx, charactername)
     else:
-        with open(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/character.txt", "r") as character:
+        with open(f"{dirr}/Players/{str(ctx.user.id)}/character.txt", "r") as character:
             charactername = character.readline()
         makecharacter(ctx, charactername)
 

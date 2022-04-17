@@ -12,8 +12,6 @@ async def enterdungeon(ctx, bot, user, id, character):
     def is_auth(m):
         return m.author == ctx.author
 
-
-
     enemylist = None
     boss = None
     enemyclass = None
@@ -34,8 +32,6 @@ async def enterdungeon(ctx, bot, user, id, character):
     equip.add_item(finish)
     view.add_item(enter)
     view.add_item(turnback)
-    if not os.path.exists(f"{dirr}/Players/{str(id)}/inventory"):
-        os.mkdir(f"{dirr}/Players/{str(id)}/inventory")
 
     player = Player(str(id), character)
 
