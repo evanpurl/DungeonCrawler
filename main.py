@@ -191,8 +191,28 @@ async def dc(ctx):
 
 @bot.slash_command(guild_ids=Support, description="Command to set your current character.")
 async def setcharacter(ctx):
+    def is_auth(m):
+        return m.author == ctx.author
+    isfolder = []
     characters = os.listdir(f"{dirr}/Players/{str(ctx.user.id)}")
-    # Number choosing code goes here.
+    for a in characters:
+        if not a.endswith(".txt"):
+            isfolder.append(a)
+    unn = []
+    num = []
+    if len(isfolder) != 0:
+        for a, b in enumerate(isfolder):
+            unn.append(f"{a + 1}. {b}")
+            num.append(f"{a + 1}")
+        await ctx.send(f"**{ctx.user.name}'s Characters:** \n" + '\n'.join(unn))
+        await ctx.send(f"Please select the character you want to choose.")
+        unitmsg = await bot.wait_for('message', check=is_auth, timeout=300)
+        if not int(unitmsg.content).isdigit():
+            await ctx.respond(f"{unitmsg.content} is not a valid entry.")
+        else:
+            if a in num:
+                ind = num.index(a)
+
 
 
 @bot.slash_command(guild_ids=Support, description="Command to create new character.")
