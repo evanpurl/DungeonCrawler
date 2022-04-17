@@ -57,10 +57,8 @@ class Player:
             return self.mana
 
     def getname(self):
-        with open(f"{dirr}/Players/{self.memberid}/{self.charactername}/name.txt", "r") as name:
-            n = name.readline()
-            self.name = int(n)
-            name.close()
+        with open(f"{dirr}/Players/{self.memberid}/{self.charactername}/character.txt", "r") as name:
+            self.name = name.readline()
         return self.name
 
     def getdamage(self):  # Updated 3/23/2022
@@ -183,35 +181,35 @@ class Player:
         return self.inv
 
     def getlevel(self):
-        if not os.path.exists(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}level.txt"):
-            with open(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}level.txt", "w+") as level:
+        if not os.path.exists(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}/level.txt"):
+            with open(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}/level.txt", "w+") as level:
                 level.write(str(1))
                 return 1
         else:
-            with open(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}level.txt", "r") as level:
+            with open(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}/level.txt", "r") as level:
                 l = level.readline()
                 return l
 
     def getxp(self):
-        if not os.path.exists(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}xp.txt"):
-            with open(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}xp.txt", "w+") as level:
+        if not os.path.exists(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}/xp.txt"):
+            with open(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}/xp.txt", "w+") as level:
                 level.write(str(0))
                 return 0
         else:
-            with open(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}xp.txt", "r") as level:
+            with open(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}/xp.txt", "r") as level:
                 l = level.readline()
                 return l
 
     def setxp(self, xp):
-        with open(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}xp.txt", "w+") as level:
+        with open(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}/xp.txt", "w+") as level:
             level.write(str(xp))
 
     def levelup(self):
-        with open(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}level.txt", "r") as level:
+        with open(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}/level.txt", "r") as level:
             l = level.readline()
-        with open(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}xp.txt", "w+") as xp:
+        with open(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}/xp.txt", "w+") as xp:
             xp.write(str(0))
-        with open(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}level.txt", "w+") as level:
+        with open(f"{dirr}/Players/{str(self.memberid)}/{self.charactername}/level.txt", "w+") as level:
             lev = str(int(l) + 1)
             level.write(lev)
         return lev

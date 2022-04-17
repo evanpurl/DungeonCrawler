@@ -183,7 +183,7 @@ async def enterdungeon(ctx, bot, user, id, character):
             player.defense = player.getdefense() * (
                     player.getarmordef(player.armor) + player.getshielddef(player.shield))
         await user.send(
-            f"**Level: {player.level} \n Health: {player.health} \n Mana: {player.mana} \n Weapon: {player.weapon} \n "
+            f"**Name: {player.charactername} \n Level: {player.level} \n Health: {player.health} \n Mana: {player.mana} \n Weapon: {player.weapon} \n "
             f"Damage: {player.damage} \n Shield: {player.shield} \n Defense: {player.defense} \n Armor Set: "
             f"{player.armor}**")
         w = os.listdir(f"{dirr}/globals/dungeons/")
@@ -203,9 +203,9 @@ async def enterdungeon(ctx, bot, user, id, character):
             dname = w[r].replace(".txt", "")
             lines = f.readlines()
             light = lines[0].replace("ll: ", "")
-            enemies = lines[1].replace("enemies: ", "").replace("\n", "").split(",")
+            enemies = lines[1].replace("enemies: ", "").replace("\n", "")
             nonlocal boss
-            boss = [i for i in lines if 'boss' in i][0].split(": ")[1].replace("\n", "")
+            boss = [i for i in lines if 'boss' in i][0].split(": ")[1].replace("\n", "").split(",")
         nonlocal enemylist
         enemylist = enemies
 
@@ -213,7 +213,7 @@ async def enterdungeon(ctx, bot, user, id, character):
         embed = discord.Embed(
             title=f"You have come to the entrance of the {llword[int(light)]} {dname}, what would you like to do? 'Turn back' or 'Enter'?")
         embed.add_field(name="Light Level", value=light)
-        embed.add_field(name="Enemies", value=str(enemies)[1:-1])
+        embed.add_field(name="Enemies", value=str(enemies).replace(",", ", "))
         await user.send("Welcome to Dungeon Crawler.", embed=d1embed)
 
         await user.send(embed=embed, view=view)

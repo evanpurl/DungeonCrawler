@@ -176,10 +176,10 @@ async def player(ctx):
 @bot.slash_command(guild_ids=Support, description="Dungeon Crawler start command.")
 async def dc(ctx):
     if not os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}"):
-        charactername = ctx.user.name
+        charactername = "default"
         os.mkdir(f"{dirr}/Players/{str(ctx.user.id)}")
-        os.mkdir(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}")
-        os.mkdir(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/inventory")
+        os.mkdir(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}")
+        os.mkdir(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/inventory")
         makecharacter(ctx, charactername)
     else:
         with open(f"{dirr}/Players/{str(ctx.user.id)}/character.txt", "r") as character:
@@ -195,7 +195,12 @@ async def setcharacter(ctx):
         return m.author == ctx.author
     await ctx.respond("Character set tool started.")
     isfolder = []
-    characters = os.listdir(f"{dirr}/Players/{str(ctx.user.id)}")
+    if not os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}"):
+        os.mkdir(f"{dirr}/Players/{str(ctx.user.id)}")
+        makecharacter(ctx, "default")
+        characters = os.listdir(f"{dirr}/Players/{str(ctx.user.id)}")
+    else:
+        characters = os.listdir(f"{dirr}/Players/{str(ctx.user.id)}")
     for a in characters:
         if not a.endswith(".txt"):
             isfolder.append(a)

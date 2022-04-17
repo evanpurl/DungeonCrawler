@@ -7,6 +7,8 @@ dirr = sys.path[0]
 
 
 def makecharacter(ctx, name):
+    if not os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{name}"):
+        os.mkdir(f"{dirr}/Players/{str(ctx.user.id)}/{name}")
     with open(f"{dirr}/Players/{str(ctx.user.id)}/character.txt", "w+") as character:
         character.write(name)
     with open(f"{dirr}/Players/{str(ctx.user.id)}/{name}/damage.txt", "w+") as damage:
@@ -161,7 +163,7 @@ async def createdungeon(ctx, bot):
         await ctx.respond(
             "What enemies are present in this dungeon? Separate each by commas. ie snake,skeleton,skeleton archer")
         damage = await bot.wait_for('message', check=is_auth, timeout=300)
-        damage = damage.content.replace(" ,", "").replace(", ", "")
+        damage = damage.content.replace(" ,", ",").replace(", ", ",")
         c.append(f'enemies: {damage}')
         await ctx.respond(f'enemies: {damage}')
         await ctx.respond("What boss is in this dungeon? Check discord for boss list.")
