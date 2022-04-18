@@ -4,7 +4,7 @@ from discord.ui import Button, View
 import os
 import sys
 from directional import enterdungeon
-from misc import readwallet
+from misc import readwallet, writewallet, getcharacter
 from creators import createclass, createenemy, createdungeon, makecharacter
 from shop import generateshop, purchaseitem
 
@@ -27,14 +27,17 @@ async def on_ready():
         print("Initial shop generation has completed!")
 
 
-@bot.event
-async def on_guild_join(guild):
-    if not os.path.exists(f"{dirr}/World/{str(guild.id)}"):  # Creates server folders if they do not exist already.
-        os.mkdir(f"{dirr}/World/{str(guild.id)}")
-
-
 testing = [904120920862519396]
 Support = [904120920862519396]
+
+
+@bot.slash_command(guild_ids=Support, description="Command to buy items from the shop.")
+async def shop(ctx):
+    character = getcharacter(str(ctx.user.id))
+    with open(f"{dirr}/Players/{str(ctx.user.id)}/{character}/wallet.txt", "r") as mon:
+        money = int(mon.readline())
+    shopitems = os.listdir(f"{dirr}/globals/shop")
+    # Same code as the character selection code goes here.
 
 
 @bot.slash_command(guild_ids=Support, description="Admin command to create Items.")
@@ -156,8 +159,7 @@ async def itemcreator(ctx):
 @bot.slash_command(description="Command to display player data.")
 async def player(ctx):
     if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/character.txt"):
-        with open(f"{dirr}/Players/{str(ctx.user.id)}/character.txt", "r") as character:
-            charactername = character.readline()
+        charactername = getcharacter(str(ctx.user.id))
         servstats = []
         if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/class.txt"):
             with open(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/class.txt", "r") as clas:
@@ -217,8 +219,7 @@ async def dc(ctx):
         os.mkdir(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/inventory")
         makecharacter(ctx, charactername)
     else:
-        with open(f"{dirr}/Players/{str(ctx.user.id)}/character.txt", "r") as character:
-            charactername = character.readline()
+        charactername = getcharacter(ctx.user.id)
         makecharacter(ctx, charactername)
 
     await enterdungeon(ctx, bot, ctx.author, ctx.user.id, charactername)
@@ -228,6 +229,7 @@ async def dc(ctx):
 async def setcharacter(ctx):
     def is_auth(m):
         return m.author == ctx.author
+
     await ctx.respond("Character set tool started.")
     isfolder = []
     if not os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}"):

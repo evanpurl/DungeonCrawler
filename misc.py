@@ -4,24 +4,30 @@ import sys
 dirr = sys.path[0]
 
 
-def readwallet(guildid, memberid):
+def readwallet(memberid, character):
     with open(
-            f"{dirr}/World/{guildid}/Players/{memberid}/wallet.txt",
+            f"{dirr}/Players/{memberid}/{character}/wallet.txt",
             "r") as item:
         money = item.readline()
 
     return money
 
 
-def writewallet(guildid, memberid, change):
+def writewallet(memberid, character, change):
     with open(
-            f"{dirr}/World/{guildid}/Players/{memberid}/wallet.txt",
+            f"{dirr}/Players/{memberid}/{character}/wallet.txt",
             "r") as item:
         money = item.readline()
 
     with open(
-            f"{dirr}/World/{guildid}/Players/{memberid}/wallet.txt",
+            f"{dirr}/Players/{memberid}/{character}/wallet.txt",
             "w") as item:
         item.write(str(int(money) + int(change)))
 
     return str(int(money) + int(change))
+
+
+def getcharacter(userid):
+    with open(f"{dirr}/Players/{str(userid)}/character.txt", "r") as m:
+        character = m.readline()
+    return character
