@@ -214,6 +214,27 @@ class Player:
             level.write(lev)
         return lev
 
+    def readwallet(self):
+        with open(
+                f"{dirr}/Players/{self.memberid}/{self.charactername}/wallet.txt",
+                "r") as item:
+            money = item.readline()
+
+        return money
+
+    def writewallet(self, change):
+        with open(
+                f"{dirr}/Players/{self.memberid}/{self.charactername}/wallet.txt",
+                "r") as item:
+            money = item.readline()
+
+        with open(
+                f"{dirr}/Players/{self.memberid}/{self.charactername}/wallet.txt",
+                "w") as item:
+            item.write(str(int(money) + int(change)))
+
+        return str(int(money) + int(change))
+
 
 class Enemy:
     def __init__(self, unitname):

@@ -6,6 +6,7 @@ import sys
 from directional import enterdungeon
 from misc import readwallet
 from creators import createclass, createenemy, createdungeon, makecharacter
+from shop import rotateshop
 
 intents = discord.Intents.all()
 bot = discord.Bot(intents=intents)
@@ -17,6 +18,13 @@ async def on_ready():
     print(f"We have logged in as {bot.user}")
     print(f"Py-Cord version: {discord.__version__}")
     await bot.change_presence(activity=discord.Game('Powered by NLS: https://www.nitelifesoftware.com'))
+    try:
+        print("Starting Shop")
+        await rotateshop()
+    except:
+        print("There was an issue starting the shop")
+    finally:
+        print("Initial shop generation has completed!")
 
 
 @bot.event
@@ -150,32 +158,54 @@ async def player(ctx):
     if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/character.txt"):
         with open(f"{dirr}/Players/{str(ctx.user.id)}/character.txt", "r") as character:
             charactername = character.readline()
+        servstats = []
+        if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/class.txt"):
+            with open(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/class.txt", "r") as clas:
+                servstats.append(f"Class: {clas.readline()}")
+        if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/damage.txt"):
+            with open(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/damage.txt", "r") as damage:
+                servstats.append(f"Damage: {damage.readline()}")
+        if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/defense.txt"):
+            with open(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/defense.txt", "r") as defense:
+                servstats.append(f"Defense: {defense.readline()}")
+        if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/health.txt"):
+            with open(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/health.txt", "r") as health:
+                servstats.append(f"Health: {health.readline()}")
+        if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/level.txt"):
+            with open(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/level.txt", "r") as level:
+                servstats.append(f"Level: {level.readline()}")
+        if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/mana.txt"):
+            with open(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/mana.txt", "r") as mana:
+                servstats.append(f"Mana: {mana.readline()}")
+        if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/xp.txt"):
+            with open(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/xp.txt", "r") as xp:
+                servstats.append(f"XP: {xp.readline()}")
+        await ctx.respond(f"**Player information for {charactername}:** \n \n" + "\n".join(servstats))
     else:
         makecharacter(ctx, "default")
-    servstats = []
-    if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/class.txt"):
-        with open(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/class.txt", "r") as clas:
-            servstats.append(f"Class: {clas.readline()}")
-    if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/damage.txt"):
-        with open(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/damage.txt", "r") as damage:
-            servstats.append(f"Damage: {damage.readline()}")
-    if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/defense.txt"):
-        with open(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/defense.txt", "r") as defense:
-            servstats.append(f"Defense: {defense.readline()}")
-    if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/health.txt"):
-        with open(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/health.txt", "r") as health:
-            servstats.append(f"Health: {health.readline()}")
-    if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/level.txt"):
-        with open(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/level.txt", "r") as level:
-            servstats.append(f"Level: {level.readline()}")
-    if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/mana.txt"):
-        with open(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/mana.txt", "r") as mana:
-            servstats.append(f"Mana: {mana.readline()}")
-    if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/xp.txt"):
-        with open(f"{dirr}/Players/{str(ctx.user.id)}/{ctx.user.name}/xp.txt", "r") as xp:
-            servstats.append(f"XP: {xp.readline()}")
-
-    await ctx.respond(f"**Player information for {ctx.user.name}:** \n \n" + "\n".join(servstats))
+        servstats = []
+        if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{'default'}/class.txt"):
+            with open(f"{dirr}/Players/{str(ctx.user.id)}/{'default'}/class.txt", "r") as clas:
+                servstats.append(f"Class: {clas.readline()}")
+        if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{'default'}/damage.txt"):
+            with open(f"{dirr}/Players/{str(ctx.user.id)}/{'default'}/damage.txt", "r") as damage:
+                servstats.append(f"Damage: {damage.readline()}")
+        if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{'default'}/defense.txt"):
+            with open(f"{dirr}/Players/{str(ctx.user.id)}/{'default'}/defense.txt", "r") as defense:
+                servstats.append(f"Defense: {defense.readline()}")
+        if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{'default'}/health.txt"):
+            with open(f"{dirr}/Players/{str(ctx.user.id)}/{'default'}/health.txt", "r") as health:
+                servstats.append(f"Health: {health.readline()}")
+        if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{'default'}/level.txt"):
+            with open(f"{dirr}/Players/{str(ctx.user.id)}/{'default'}/level.txt", "r") as level:
+                servstats.append(f"Level: {level.readline()}")
+        if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{'default'}/mana.txt"):
+            with open(f"{dirr}/Players/{str(ctx.user.id)}/{'default'}/mana.txt", "r") as mana:
+                servstats.append(f"Mana: {mana.readline()}")
+        if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{'default'}/xp.txt"):
+            with open(f"{dirr}/Players/{str(ctx.user.id)}/{'default'}/xp.txt", "r") as xp:
+                servstats.append(f"XP: {xp.readline()}")
+        await ctx.respond(f"**Player information for {'default'}:** \n \n" + "\n".join(servstats))
 
 
 @bot.slash_command(guild_ids=Support, description="Dungeon Crawler start command.")

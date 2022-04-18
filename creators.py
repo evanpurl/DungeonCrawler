@@ -11,6 +11,8 @@ def makecharacter(ctx, name):
         os.mkdir(f"{dirr}/Players/{str(ctx.user.id)}/{name}")
     with open(f"{dirr}/Players/{str(ctx.user.id)}/character.txt", "w+") as character:
         character.write(name)
+    with open(f"{dirr}/Players/{str(ctx.user.id)}/wallet.txt", "w+") as wallet:
+        wallet.write(str(250))
     with open(f"{dirr}/Players/{str(ctx.user.id)}/{name}/damage.txt", "w+") as damage:
         damage.write(str(5))
     with open(f"{dirr}/Players/{str(ctx.user.id)}/{name}/defense.txt", "w+") as defense:
