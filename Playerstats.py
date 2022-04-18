@@ -130,26 +130,13 @@ class Player:
     def addtoinv(self, itemname):
         pitems = os.listdir(f"{dirr}/Players/{self.memberid}/{self.charactername}/inventory")
         if itemname + '.txt' in pitems:
-            with open(f"{dirr}/globals/items/{itemname}.txt", "r") as pitem:
-                lines = pitem.readlines()
-                weapon = [i for i in lines if 'weapon' in i]
-                shield = [i for i in lines if 'shield' in i]
-                armor = [i for i in lines if 'armor' in i]
-                if weapon:
-                    pass
-                elif shield:
-                    pass
-                elif armor:
-                    pass
-                else:
-                    with open(f"{dirr}/Players/{self.memberid}/{self.charactername}/inventory/{itemname}.txt",
-                              "r") as f:
-                        lines = f.readlines()
-                        amount = [i for i in lines if 'quantity' in i]
-                    with open(f"{dirr}/Players/{self.memberid}/{self.charactername}/inventory/{itemname}.txt",
-                              "w") as f:
-                        f.write(f"quantity: {str(int(amount[0].split(' ')[1]) + 1)}")
-            pitem.close()
+            with open(f"{dirr}/Players/{self.memberid}/{self.charactername}/inventory/{itemname}.txt",
+                      "r") as f:
+                lines = f.readlines()
+                amount = [i for i in lines if 'quantity' in i]
+            with open(f"{dirr}/Players/{self.memberid}/{self.charactername}/inventory/{itemname}.txt",
+                      "w") as f:
+                f.write(f"quantity: {str(int(amount[0].split(' ')[1]) + 1)}")
         else:
             with open(f"{dirr}/Players/{self.memberid}/{self.charactername}/inventory/{itemname}.txt", "w") as f:
                 f.write(f"quantity: {str(1)}")
@@ -218,7 +205,7 @@ class Player:
         with open(
                 f"{dirr}/Players/{self.memberid}/{self.charactername}/wallet.txt",
                 "r") as item:
-            money = item.readline()
+            money = int(item.readline())
 
         return money
 

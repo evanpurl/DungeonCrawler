@@ -1,2 +1,3 @@
-Value: 2 
-Category: resource
+Value: 4 
+type: weapon 
+damage: 1.255

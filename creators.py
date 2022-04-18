@@ -9,9 +9,10 @@ dirr = sys.path[0]
 def makecharacter(ctx, name):
     if not os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{name}"):
         os.mkdir(f"{dirr}/Players/{str(ctx.user.id)}/{name}")
+        os.mkdir(f"{dirr}/Players/{str(ctx.user.id)}/{name}/inventory")
     with open(f"{dirr}/Players/{str(ctx.user.id)}/character.txt", "w+") as character:
         character.write(name)
-    with open(f"{dirr}/Players/{str(ctx.user.id)}/wallet.txt", "w+") as wallet:
+    with open(f"{dirr}/Players/{str(ctx.user.id)}/{name}/wallet.txt", "w+") as wallet:
         wallet.write(str(250))
     with open(f"{dirr}/Players/{str(ctx.user.id)}/{name}/damage.txt", "w+") as damage:
         damage.write(str(5))

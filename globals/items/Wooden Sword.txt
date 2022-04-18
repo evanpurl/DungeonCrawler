@@ -1,8 +1,3 @@
-type: weapon
-damage: 10
-defense: 0
-bleeding: f
-poison: f
-burning: f
-explodable: f
-freezing: t
+Value: 42 
+type: weapon 
+damage: 1.452

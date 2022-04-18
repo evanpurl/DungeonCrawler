@@ -1,4 +1,3 @@
-Value: 17 
+Value: 54 
 type: weapon 
-recipe: stone,stone,stick 
-damage: 7
+damage: 2.165

@@ -31,3 +31,10 @@ def getcharacter(userid):
     with open(f"{dirr}/Players/{str(userid)}/character.txt", "r") as m:
         character = m.readline()
     return character
+
+
+def getvalue(itemname):
+    with open(f"{dirr}/globals/items/{itemname}.txt", "r") as item:
+        lines = item.readlines()
+        value = [i for i in lines if 'Value' in i][0].split(": ")[1]
+    return int(value)

@@ -203,9 +203,9 @@ async def enterdungeon(ctx, bot, user, id, character):
             dname = w[r].replace(".txt", "")
             lines = f.readlines()
             light = lines[0].replace("ll: ", "")
-            enemies = lines[1].replace("enemies: ", "").replace("\n", "")
+            enemies = lines[1].replace("enemies: ", "").replace("\n", "").split(",")
             nonlocal boss
-            boss = [i for i in lines if 'boss' in i][0].split(": ")[1].replace("\n", "").split(",")
+            boss = [i for i in lines if 'boss' in i][0].split(": ")[1].replace("\n", "")
         nonlocal enemylist
         enemylist = enemies
 
@@ -355,6 +355,7 @@ async def enterdungeon(ctx, bot, user, id, character):
         nonlocal room
         nonlocal maxrooms
         if room == maxrooms:
+            await interaction.response.edit_message(view=None)
             await user.send(f"You have retreated from the boss, **XP Gained: 5**. Ending Dungeon Crawler.")
             player.xp += 5
             player.setxp(player.xp)

@@ -4,9 +4,10 @@ from discord.ui import Button, View
 import os
 import sys
 from directional import enterdungeon
-from misc import readwallet, writewallet, getcharacter
+from misc import getcharacter, getvalue
 from creators import createclass, createenemy, createdungeon, makecharacter
-from shop import generateshop, purchaseitem
+from shop import generateshop
+from Playerstats import Player
 
 intents = discord.Intents.all()
 bot = discord.Bot(intents=intents)
@@ -31,17 +32,94 @@ testing = [904120920862519396]
 Support = [904120920862519396]
 
 
+@bot.slash_command(guild_ids=Support, description="Command to sell items.")
+async def sell(ctx):
+    await ctx.respond("Selling module opened.")
+    if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/character.txt"):
+        player = Player(str(ctx.user.id), getcharacter(str(ctx.user.id)))
+    else:
+        makecharacter(ctx, "default")
+        player = Player(str(ctx.user.id), getcharacter(str(ctx.user.id)))
+
+    def is_auth(m):
+        return m.author == ctx.author
+
+    character = getcharacter(str(ctx.user.id))
+    items = os.listdir(f"{dirr}/Players/{str(ctx.user.id)}/{character}/inventory")
+    unn = []
+    num = []
+    if len(items) != 0:
+        for a, b in enumerate(items):
+            unn.append(f"{a + 1}. {b.replace('.txt', '')}")
+            num.append(f"{a + 1}")
+        await ctx.send(f"** {getcharacter(str(ctx.user.id))} Items:** \n" + '\n'.join(unn))
+        await ctx.send(f"Please select the item you want to sell. Type 0 to end this command.")
+        unitmsg = await bot.wait_for('message', check=is_auth, timeout=300)
+        if not unitmsg.content.isdigit():
+            await ctx.respond(f"{unitmsg.content} is not a valid entry, please re-run the command to try again.")
+        else:
+            try:
+                if int(unitmsg.content) == 0:
+                    await ctx.send("Command ended.")
+                else:
+                    ind = num.index(unitmsg.content)
+                    itemval = getvalue(items[ind].replace(".txt", ""))
+                    player.writewallet(itemval)
+                    player.remfrominv(items[ind].replace(".txt", ""))
+                    await ctx.send(f"{items[ind].replace('.txt', '')} has been sold! Money gained: {itemval}")
+            except:
+                await ctx.respond(
+                    f"{unitmsg.content} is not a valid choice, please re-run the command to try again.")
+    else:
+        await ctx.respond("No items available to sell.")
+
+
 @bot.slash_command(guild_ids=Support, description="Command to buy items from the shop.")
 async def shop(ctx):
+    await ctx.respond("Shop has been opened.")
+    if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/character.txt"):
+        player = Player(str(ctx.user.id), getcharacter(str(ctx.user.id)))
+    else:
+        makecharacter(ctx, "default")
+        player = Player(str(ctx.user.id), getcharacter(str(ctx.user.id)))
+
+    def is_auth(m):
+        return m.author == ctx.author
+
     character = getcharacter(str(ctx.user.id))
     with open(f"{dirr}/Players/{str(ctx.user.id)}/{character}/wallet.txt", "r") as mon:
         money = int(mon.readline())
     shopitems = os.listdir(f"{dirr}/globals/shop")
-    # Same code as the character selection code goes here.
+    unn = []
+    num = []
+    if len(shopitems) != 0:
+        for a, b in enumerate(shopitems):
+            unn.append(f"{a + 1}. {b}")
+            num.append(f"{a + 1}")
+        await ctx.send(f"**Shop Items:** \n" + '\n'.join(unn))
+        await ctx.send(f"Please select the item you want to purchase. Type 0 to close the shop.")
+        unitmsg = await bot.wait_for('message', check=is_auth, timeout=300)
+        if not unitmsg.content.isdigit():
+            await ctx.respond(f"{unitmsg.content} is not a valid entry, please re-run the command to try again.")
+        else:
+            #try:
+            if int(unitmsg.content) == 0:
+                await ctx.send("Shop closed, command ended.")
+            else:
+                ind = num.index(unitmsg.content)
+                if player.readwallet() - getvalue(shopitems[ind].replace(".txt", "")) >= 0:
+                    player.addtoinv(shopitems[ind].replace(".txt", ""))
+                    player.writewallet(-getvalue(shopitems[ind].replace(".txt", "")))
+                    await ctx.send(f"Item {shopitems[ind].replace('.txt', '')} has been purchased!")
+                    await generateshop()
+                else:
+                    await ctx.send("You cannot afford that item.")
+            # except:
+            #     await ctx.respond(f"{unitmsg.content} is not a valid choice, please re-run the command to try again.")
 
 
 @bot.slash_command(guild_ids=Support, description="Admin command to create Items.")
-async def itemcreator(ctx):
+async def createitem(ctx):
     role = discord.utils.get(ctx.guild.roles, name="Design Lead")
     if role in ctx.user.roles:
         itemname = ""
@@ -102,15 +180,6 @@ async def itemcreator(ctx):
                         f = open(f"{itemname}.txt", 'w+')
                         f.write(f"{itemvalue} \n")
                         f.write(f"{itemtype} \n")
-                        await interaction.followup.send(f"Is this item craftable? (y/n)")
-                        iscraftable = await bot.wait_for('message', check=is_auth, timeout=300)
-                        if iscraftable.content == "y":
-                            await interaction.followup.send(f"What is the recipe? (Cloth,Iron,Stone) < Must match the "
-                                                            f"case of the resource, Usually uppercase as shown.")
-                            recipe = await bot.wait_for('message', check=is_auth, timeout=300)
-                            recipe = recipe.content.replace(" ", "").lower()
-                            recipe = "recipe: " + recipe
-                            f.write(f"{recipe} \n")
                         if "weapon" in itemtype:
                             await interaction.followup.send(
                                 f"How much damage will this item do? (this is a multiplier, usually over 1.0)")
@@ -118,12 +187,6 @@ async def itemcreator(ctx):
                             damage = str(dam.content)
                             damage = "damage: " + damage
                             f.write(f"{damage}")
-                            await interaction.followup.send(
-                                f"Does this weapon have any special damage types? (poison, fire, freezing, explosive)")
-                            eff = await bot.wait_for('message', check=is_auth, timeout=300)
-                            effect = str(eff.content)
-                            effect = "effect: " + effect
-                            f.write(f"{effect}")
                         if "shield" in itemtype:
                             await interaction.followup.send(
                                 f"How much defense does this item have? (this is a multiplier, usually over 1.0)")
@@ -142,6 +205,7 @@ async def itemcreator(ctx):
                         f.close()
                         await interaction.followup.send(
                             f"Item {itemname} has been created!")
+                        await generateshop()
                     except:
                         await interaction.response.edit_message(view=None)
                         await interaction.followup.send(
@@ -161,6 +225,9 @@ async def player(ctx):
     if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/character.txt"):
         charactername = getcharacter(str(ctx.user.id))
         servstats = []
+        if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/wallet.txt"):
+            with open(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/wallet.txt", "r") as money:
+                servstats.append(f"Money: {money.readline()}")
         if os.path.exists(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/class.txt"):
             with open(f"{dirr}/Players/{str(ctx.user.id)}/{charactername}/class.txt", "r") as clas:
                 servstats.append(f"Class: {clas.readline()}")
