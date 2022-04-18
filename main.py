@@ -6,7 +6,7 @@ import sys
 from directional import enterdungeon
 from misc import readwallet
 from creators import createclass, createenemy, createdungeon, makecharacter
-from shop import rotateshop
+from shop import generateshop, purchaseitem
 
 intents = discord.Intents.all()
 bot = discord.Bot(intents=intents)
@@ -20,7 +20,7 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game('Powered by NLS: https://www.nitelifesoftware.com'))
     try:
         print("Starting Shop")
-        await rotateshop()
+        await generateshop()
     except:
         print("There was an issue starting the shop")
     finally:
