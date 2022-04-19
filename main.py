@@ -64,9 +64,9 @@ async def sell(ctx):
                 else:
                     ind = num.index(unitmsg.content)
                     itemval = getvalue(items[ind].replace(".txt", ""))
-                    player.writewallet(itemval)
+                    player.writewallet(itemval/2)
                     player.remfrominv(items[ind].replace(".txt", ""))
-                    await ctx.send(f"{items[ind].replace('.txt', '')} has been sold! Money gained: {itemval}")
+                    await ctx.send(f"{items[ind].replace('.txt', '')} has been sold! Money gained: {itemval/2}")
             except:
                 await ctx.respond(
                     f"{unitmsg.content} is not a valid choice, please re-run the command to try again.")
@@ -102,20 +102,20 @@ async def shop(ctx):
         if not unitmsg.content.isdigit():
             await ctx.respond(f"{unitmsg.content} is not a valid entry, please re-run the command to try again.")
         else:
-            #try:
-            if int(unitmsg.content) == 0:
-                await ctx.send("Shop closed, command ended.")
-            else:
-                ind = num.index(unitmsg.content)
-                if player.readwallet() - getvalue(shopitems[ind].replace(".txt", "")) >= 0:
-                    player.addtoinv(shopitems[ind].replace(".txt", ""))
-                    player.writewallet(-getvalue(shopitems[ind].replace(".txt", "")))
-                    await ctx.send(f"Item {shopitems[ind].replace('.txt', '')} has been purchased!")
-                    await generateshop()
+            try:
+                if int(unitmsg.content) == 0:
+                    await ctx.send("Shop closed, command ended.")
                 else:
-                    await ctx.send("You cannot afford that item.")
-            # except:
-            #     await ctx.respond(f"{unitmsg.content} is not a valid choice, please re-run the command to try again.")
+                    ind = num.index(unitmsg.content)
+                    if player.readwallet() - getvalue(shopitems[ind].replace(".txt", "")) >= 0:
+                        player.addtoinv(shopitems[ind].replace(".txt", ""))
+                        player.writewallet(-getvalue(shopitems[ind].replace(".txt", "")))
+                        await ctx.send(f"Item {shopitems[ind].replace('.txt', '')} has been purchased!")
+                        await generateshop()
+                    else:
+                        await ctx.send("You cannot afford that item.")
+            except:
+                await ctx.respond(f"{unitmsg.content} is not a valid choice, please re-run the command to try again.")
 
 
 @bot.slash_command(guild_ids=Support, description="Admin command to create Items.")
