@@ -27,7 +27,7 @@ async def generateshop():  # Generates shop on start
     # Adds 5 random items to shop.
     itemchoices = []
     x = 0
-    while x != 6:
+    while x != 5:
         choice = random.randint(0, len(was) - 1)
         itemchoices.append(was[choice])
         x += 1

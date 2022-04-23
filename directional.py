@@ -12,6 +12,8 @@ async def enterdungeon(ctx, bot, user, id, character):
     def is_auth(m):
         return m.author == ctx.author
 
+    items = os.listdir(f"{dirr}/globals/items")
+
     enemylist = None
     boss = None
     enemyclass = None
@@ -382,11 +384,13 @@ async def enterdungeon(ctx, bot, user, id, character):
 
     async def chestopen(interaction):
         await interaction.response.edit_message(view=None)
-        await user.send("Move along! Area under construction. :)", view=move)
+        randitem = items[random.randint(0, len(items)-1)].replace(".txt", "")
+        player.addtoinv(randitem)
+        await user.send(f"Opening the chest, you have found one {randitem}", view=move)
 
     async def leavechest(interaction):
         await interaction.response.edit_message(view=None)
-        await user.send("Why didn't you open it?? Anyway, move along! Area under construction. :)", view=move)
+        await user.send("Deciding to leave the chest alone, you proceed on with your adventure.", view=move)
 
     openc.callback = chestopen
     moveback.callback = leavechest
@@ -400,11 +404,13 @@ async def enterdungeon(ctx, bot, user, id, character):
     leftbtn = Button(label=f"Left", style=discord.ButtonStyle.primary)
     rightbtn = Button(label=f"Right", style=discord.ButtonStyle.green)
     frontbtn = Button(label=f"Forward", style=discord.ButtonStyle.gray)
+    leave = Button(label=f"Leave Dungeon", style=discord.ButtonStyle.danger)
 
     move = View()
     move.add_item(leftbtn)
     move.add_item(frontbtn)
     move.add_item(rightbtn)
+    move.add_item(leave)
 
     async def leftcallback(interaction):
         await interaction.response.edit_message(view=None)
@@ -505,6 +511,12 @@ async def enterdungeon(ctx, bot, user, id, character):
                     f"**Room: {room + 1}** \n You went Forward, a locked chest is in front of you, what will "
                     f"you do?", view=chest)
 
+    async def leavecallback(interaction):
+        await interaction.response.edit_message(view=None)
+        await user.send(f"You have decided to leave the dungeon, ending Dungeon Crawler.")
+        return
+
     leftbtn.callback = leftcallback
     rightbtn.callback = rightcallback
     frontbtn.callback = frontcallback
+    leave.callback = leavecallback

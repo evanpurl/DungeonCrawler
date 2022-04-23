@@ -5,6 +5,8 @@ dirr = sys.path[0]
 
 def dunrooms(roomnum):  # This function is designed to create the dungeon's rooms.
     directions = ["left", "front", "right"]
+    items = os.listdir(f"{dirr}/globals/items")
+    dunitems = []
     left = []
     right = []
     front = []
