@@ -519,4 +519,4 @@ async def enterdungeon(ctx, bot, user, id, character):
     leftbtn.callback = leftcallback
     rightbtn.callback = rightcallback
     frontbtn.callback = frontcallback
-    leave.callback = leavecallback # Leave button added
+    leave.callback = leavecallback
