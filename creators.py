@@ -230,3 +230,5 @@ def quickitem(stats):
         if stats[2] == "armor":
             cl.write(f"type: armor \n")
             cl.write(f"defense: {str(stats[3])}")
+        if stats[2] == "loot":
+            cl.write(f"type: loot \n")

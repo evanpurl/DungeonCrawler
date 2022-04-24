@@ -1,0 +1,2 @@
+Value: 20 
+type: loot 

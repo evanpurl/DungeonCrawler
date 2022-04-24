@@ -1,0 +1,3 @@
+Value: 200 
+type: armor 
+defense: 2.25

@@ -1,0 +1,10 @@
+Item Name,Value,Type,Dam or Def
+Wooden Sword,42,weapon,1.452
+Wooden Shield,63,shield,1.868
+Wooden Armor,53,armor,1.325
+Iron Armor,200,armor,2.25
+Iron Shield,155,shield,1.5
+Iron Sword,250,weapon,1.75
+Gold,300,loot,0
+Stone,20,loot,0
+Ancient Statue,215,loot,0
