@@ -218,12 +218,15 @@ def quickclass(stats):
 def quickitem(stats):
     name = stats[0]
     value = stats[1]
-    weapon = [i for i in stats if "weapon" in i]
-    shield = [i for i in stats if "shield" in i]
-    armor = [i for i in stats if "armor" in i]
 
     with open(f"{dirr}/globals/items/{name}.txt", "w+") as cl:
-        if weapon:
+        cl.write(f"Value: {str(value)} \n")
+        if stats[2] == "weapon":
             cl.write(f"type: weapon \n")
-        cl.write(f"damage: {str(damage)} \n")
-        cl.write(f"defense: {str(defense)}")
+            cl.write(f"damage: {str(stats[3])}")
+        if stats[2] == "shield":
+            cl.write(f"type: shield \n")
+            cl.write(f"defense: {str(stats[3])}")
+        if stats[2] == "armor":
+            cl.write(f"type: armor \n")
+            cl.write(f"defense: {str(stats[3])}")

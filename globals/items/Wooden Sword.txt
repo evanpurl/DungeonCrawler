@@ -1,3 +1,0 @@
-Value: 42 
-type: weapon 
-damage: 1.452

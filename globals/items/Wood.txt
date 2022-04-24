@@ -1,2 +1,0 @@
-Value: 6.25
-type: wood

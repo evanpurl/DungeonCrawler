@@ -1,2 +1,0 @@
-Value: 15
-type: mine

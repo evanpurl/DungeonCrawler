@@ -1,3 +1,0 @@
-Value: 4 
-type: weapon 
-damage: 1.255

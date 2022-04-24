@@ -1,3 +1,0 @@
-Value: 53 
-type: armor 
-defense: 1.325

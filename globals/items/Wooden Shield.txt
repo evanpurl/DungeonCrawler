@@ -1,3 +1,0 @@
-Value: 63 
-type: shield 
-defense: 1.868

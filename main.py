@@ -5,7 +5,7 @@ import sys
 import csv
 from directional import enterdungeon
 from misc import getcharacter, getvalue
-from creators import createclass, createenemy, createdungeon, makecharacter, quickdungeon, quickenemy, quickclass
+from creators import createclass, createenemy, createdungeon, makecharacter, quickdungeon, quickenemy, quickclass, quickitem
 from shop import generateshop
 from Playerstats import Player
 
@@ -434,7 +434,7 @@ async def masscreate(ctx):
                 next(reader)
                 try:
                     for row in reader:
-                        quickclass(row)
+                        quickitem(row)
                 except:
                     await ctx.send("A problem occurred while creating your items.")
                 finally:
