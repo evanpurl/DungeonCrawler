@@ -70,11 +70,6 @@ async def createclass(ctx, bot):
             defense = await bot.wait_for('message', check=is_auth, timeout=300)
             defense = defense.content
             c.append(f'defense: {defense}')
-        await ctx.respond("Does this class contain magic?")
-        deyorn = await bot.wait_for('message', check=is_auth, timeout=300)
-        if deyorn.content.lower() == "y":
-            magic = "magic"
-            c.append(magic)
         if not os.path.exists(f"{dirr}/globals/classes/"):
             os.mkdir(f"{dirr}/globals/classes/")
         with open(f"{dirr}/globals/classes/{cname}.txt", "w+") as cl:
@@ -182,3 +177,53 @@ async def createdungeon(ctx, bot):
         await ctx.respond(f"Dungeon with the name {cname} has been created!")
 
     dname.callback = dungeonnamecallback
+
+
+def quickdungeon(stats):
+    name = stats[0]
+    light = stats[1]
+    enemies = stats[2]
+    boss = stats[3]
+
+    with open(f"{dirr}/globals/dungeons/{name}.txt", "w+") as cl:
+        cl.write(f"ll: {str(light)} \n")
+        cl.write(f"enemies: {enemies.replace(', ', ',')} \n")
+        cl.write(f"boss: {boss}")
+
+
+def quickenemy(stats):
+    name = stats[0]
+    health = stats[1]
+    damage = stats[2]
+    defense = stats[3]
+
+    with open(f"{dirr}/globals/enemies/{name}.txt", "w+") as cl:
+        cl.write(f"health: {str(health)} \n")
+        cl.write(f"damage: {str(damage)} \n")
+        cl.write(f"defense: {str(defense)}")
+
+
+def quickclass(stats):
+    name = stats[0]
+    health = stats[1]
+    damage = stats[2]
+    defense = stats[3]
+
+    with open(f"{dirr}/globals/classes/{name}.txt", "w+") as cl:
+        cl.write(f"health: {str(health)} \n")
+        cl.write(f"damage: {str(damage)} \n")
+        cl.write(f"defense: {str(defense)}")
+
+
+def quickitem(stats):
+    name = stats[0]
+    value = stats[1]
+    weapon = [i for i in stats if "weapon" in i]
+    shield = [i for i in stats if "shield" in i]
+    armor = [i for i in stats if "armor" in i]
+
+    with open(f"{dirr}/globals/items/{name}.txt", "w+") as cl:
+        if weapon:
+            cl.write(f"type: weapon \n")
+        cl.write(f"damage: {str(damage)} \n")
+        cl.write(f"defense: {str(defense)}")
