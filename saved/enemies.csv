@@ -1,0 +1,8 @@
+Enemyname (lowercase),Health,Damage,Defense,
+goblin,50,10,3,
+mummy,20,15,2,
+skeleton,50,13,3,
+skeleton archer,30,25,0,
+skeleton king,100,38,17,boss
+snake,10,5,9,
+zombie,14,15,6,

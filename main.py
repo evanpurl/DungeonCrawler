@@ -2,9 +2,10 @@ import discord
 from discord.ui import Button, View
 import os
 import sys
+import csv
 from directional import enterdungeon
 from misc import getcharacter, getvalue
-from creators import createclass, createenemy, createdungeon, makecharacter
+from creators import createclass, createenemy, createdungeon, makecharacter, quickdungeon, quickenemy, quickclass
 from shop import generateshop
 from Playerstats import Player
 
@@ -63,9 +64,9 @@ async def sell(ctx):
                 else:
                     ind = num.index(unitmsg.content)
                     itemval = getvalue(items[ind].replace(".txt", ""))
-                    player.writewallet(itemval/2)
+                    player.writewallet(itemval / 2)
                     player.remfrominv(items[ind].replace(".txt", ""))
-                    await ctx.send(f"{items[ind].replace('.txt', '')} has been sold! Money gained: {itemval/2}")
+                    await ctx.send(f"{items[ind].replace('.txt', '')} has been sold! Money gained: {itemval / 2}")
             except:
                 await ctx.respond(
                     f"{unitmsg.content} is not a valid choice, please re-run the command to try again.")
@@ -113,7 +114,7 @@ async def shop(ctx):
                         await generateshop()
                     else:
                         await ctx.send("You cannot afford that item.")
-            except:
+            except IndexError as e:
                 await ctx.respond(f"{unitmsg.content} is not a valid choice, please re-run the command to try again.")
 
 
@@ -369,6 +370,77 @@ async def dungeoncreator(ctx):
     role = discord.utils.get(ctx.guild.roles, name="Design Lead")
     if role in ctx.user.roles:
         await createdungeon(ctx, bot)
+    else:
+        await ctx.respond("You do not have the required permissions to run this command. Role needed: **Design Lead**")
+
+
+@bot.slash_command(guild_ids=Support)
+async def masscreate(ctx):
+    def is_auth(m):
+        return m.author == ctx.author
+
+    role = discord.utils.get(ctx.guild.roles, name="Design Lead")
+    if role in ctx.user.roles:
+        await ctx.respond("Which creator do you want to access? (dungeon, enemy, class or item.)")
+        choice = await bot.wait_for('message', check=is_auth, timeout=300)
+        if choice.content == "dungeon": # Dungeon Mode
+            await ctx.send("(Dungeon Mode) Please upload your file now, it should be in the format '.csv'")
+            file = await bot.wait_for('message', check=is_auth, timeout=300)
+            await file.attachments[0].save(fp=f"{dirr}/saved/dungeons.csv")
+            with open(f"{dirr}/saved/dungeons.csv", "r") as f:
+                reader = csv.reader(f)
+                next(reader)
+                try:
+                    for row in reader:
+                        quickdungeon(row)
+                except:
+                    await ctx.send("A problem occurred while creating your dungeons.")
+                finally:
+                    await ctx.send("Dungeons have been created!")
+        elif choice.content == "enemy": # Enemy Mode
+            await ctx.send("(Enemy mode) Please upload your file now, it should be in the format '.csv'")
+            file = await bot.wait_for('message', check=is_auth, timeout=300)
+            await file.attachments[0].save(fp=f"{dirr}/saved/enemies.csv")
+            with open(f"{dirr}/saved/enemies.csv", "r") as f:
+                reader = csv.reader(f)
+                next(reader)
+                try:
+                    for row in reader:
+                        quickenemy(row)
+                except:
+                    await ctx.send("A problem occurred while creating your enemies.")
+                finally:
+                    await ctx.send("Enemies have been created!")
+        elif choice.content == "class": # Class Mode
+            await ctx.send("(Class mode) Please upload your file now, it should be in the format '.csv'")
+            file = await bot.wait_for('message', check=is_auth, timeout=300)
+            await file.attachments[0].save(fp=f"{dirr}/saved/classes.csv")
+            with open(f"{dirr}/saved/classes.csv", "r") as f:
+                reader = csv.reader(f)
+                next(reader)
+                try:
+                    for row in reader:
+                        quickclass(row)
+                except:
+                    await ctx.send("A problem occurred while creating your classes.")
+                finally:
+                    await ctx.send("Classes have been created!")
+        elif choice.content == "item":
+            await ctx.send("(Item mode) Please upload your file now, it should be in the format '.csv'")
+            file = await bot.wait_for('message', check=is_auth, timeout=300)
+            await file.attachments[0].save(fp=f"{dirr}/saved/items.csv")
+            with open(f"{dirr}/saved/items.csv", "r") as f:
+                reader = csv.reader(f)
+                next(reader)
+                try:
+                    for row in reader:
+                        quickclass(row)
+                except:
+                    await ctx.send("A problem occurred while creating your items.")
+                finally:
+                    await ctx.send("Items have been created!")
+        else:
+            await ctx.respond("Your choice is not valid.")
     else:
         await ctx.respond("You do not have the required permissions to run this command. Role needed: **Design Lead**")
 
