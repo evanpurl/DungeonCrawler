@@ -445,4 +445,4 @@ async def masscreate(ctx):
         await ctx.respond("You do not have the required permissions to run this command. Role needed: **Design Lead**")
 
 
-bot.run("OTM3NTQ2NTI3NDY1OTYzNTkw.YfdUPg.EIaW-h0t1qDZLr0nDgJgwJbXRa0")
+bot.run("Token")
