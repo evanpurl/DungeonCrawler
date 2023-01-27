@@ -1,16 +1,8 @@
 import asyncio
 import discord
 from discord.ext import commands
-from discord.ext.commands import has_permissions, CheckFailure
-from discord.ui import Button, View
-from cogs import economy
 import os
-import csv
-from directional import enterdungeon
-from misc import getcharacter, getvalue
-from creators import createclass, createenemy, createdungeon, makecharacter, quickdungeon, quickenemy, quickclass, quickitem
-from shop import generateshop
-from Playerstats import Player
+from util.accessutils import whohasaccess
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -19,6 +11,7 @@ intents.members = True
 client = commands.Bot(command_prefix="$", intents=intents)
 
 
+# No longer syncs in on_ready, if new commands are added, run $reloadcogs
 @client.event
 async def on_ready():
     await client.wait_until_ready()
@@ -26,14 +19,8 @@ async def on_ready():
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
                                                            name=f"Powered by Nite Life Software"))
 
-async def whohasaccess():
-    try:
-        with open("util/access.txt") as access:
-            data = access.read()
-            datalist = data.split("\n")
-        return datalist
-    except:
-        print("error getting access ids.")
+
+# reloadcogs command is used to reload all cogs.
 @client.command(name="reloadcogs", description="command to reload cogs")
 async def reload(ctx) -> None:
     if str(ctx.message.author.id) in await whohasaccess():
@@ -46,11 +33,15 @@ async def reload(ctx) -> None:
         await ctx.send(f"Commands synced")
     else:
         await ctx.send(f"You can't run this command.")
+
+
+# Function used to load extensions into the bot
 async def load_extensions():
     for filename in os.listdir("./cogs"):
         if filename.endswith(".py"):
             print(f"Loading cog: {filename[:-3]}")
             await client.load_extension(f"cogs.{filename[:-3]}")
+
 
 # Main function to load extensions and then load bot.
 async def main():
@@ -62,7 +53,9 @@ async def main():
             await client.start(token)
         except KeyboardInterrupt:
             pass
-asyncio.run(main())
+
+
+asyncio.run(main())  # Runs main function above
 
 # @bot.slash_command(guild_ids=Support, description="Command to sell items.")
 # async def sell(ctx):
@@ -475,4 +468,3 @@ asyncio.run(main())
 #             await ctx.respond("Your choice is not valid.")
 #     else:
 #         await ctx.respond("You do not have the required permissions to run this command. Role needed: **Design Lead**")
-

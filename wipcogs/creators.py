@@ -1,9 +1,74 @@
-import os
-import sys
 import discord
+from discord import app_commands
+from discord.ext import commands
 from discord.ui import Button, View
 
-dirr = sys.path[0]
+syncguild = discord.Object(id=955962668756385792)
+
+
+class creators(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+    @app_commands.command(name="createclass", description="Bot owner command to make classes")
+    @app_commands.guilds(syncguild)  # Only NLS discord
+    @app_commands.checks.has_permissions(administrator=True)
+    async def createclass(self, interaction: discord.Interaction):
+        def is_auth(m):
+            return m.author == interaction.user
+
+        classname = Button(label="Class Name", style=discord.ButtonStyle.primary)
+
+        clasname = View()
+        clasname.add_item(classname)
+
+        await interaction.response.send_message("Welcome to the class creator! You will be asked a series of "
+                                                "questions to create your class.",
+                                                view=clasname)
+
+        async def classnamecallback(interaction):
+            c = []
+            await interaction.response.edit_message(view=None)
+            await ctx.respond("What is the class' name?")
+
+            cname = await bot.wait_for('message', check=is_auth, timeout=300)
+            cname = cname.content
+
+            await ctx.respond(f"The name you chose is {cname}")
+            await ctx.respond("Does this class boost the player's health?")
+            hyorn = await bot.wait_for('message', check=is_auth, timeout=300)
+            if hyorn.content.lower() == "y":
+                await ctx.respond("How much would the player's health increase by?")
+                health = await bot.wait_for('message', check=is_auth, timeout=300)
+                health = health.content
+                c.append(f'health: {health}')
+            await ctx.respond("Does this class boost the player's damage?")
+            dyorn = await bot.wait_for('message', check=is_auth, timeout=300)
+            if dyorn.content.lower() == "y":
+                await ctx.respond("How much would the player's damage increase by?")
+                damage = await bot.wait_for('message', check=is_auth, timeout=300)
+                damage = damage.content
+                c.append(f'damage: {damage}')
+            await ctx.respond("Does this class boost the player's defense?")
+            deyorn = await bot.wait_for('message', check=is_auth, timeout=300)
+            if deyorn.content.lower() == "y":
+                await ctx.respond("How much would the player's defense increase by?")
+                defense = await bot.wait_for('message', check=is_auth, timeout=300)
+                defense = defense.content
+                c.append(f'defense: {defense}')
+            if not os.path.exists(f"{dirr}/globals/classes/"):
+                os.mkdir(f"{dirr}/globals/classes/")
+            with open(f"{dirr}/globals/classes/{cname}.txt", "w+") as cl:
+                for a in c:
+                    cl.write(a + '\n')
+
+            await ctx.respond(f"Class with the name {cname} has been created!")
+
+        classname.callback = classnamecallback
+
+
+async def setup(bot):
+    await bot.add_cog(creators(bot))
 
 
 def makecharacter(ctx, name):
