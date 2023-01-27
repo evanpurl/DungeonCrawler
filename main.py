@@ -29,6 +29,7 @@ async def reload(ctx) -> None:
                 await ctx.send(f"reloading cog: {filename[:-3]}")
                 await client.reload_extension(f"cogs.{filename[:-3]}")
         await ctx.send(f"Syncing commands")
+        await client.tree.sync(guild=discord.Object(id=904120920862519396))
         await client.tree.sync()
         await ctx.send(f"Commands synced")
     else:
